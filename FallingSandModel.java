@@ -50,8 +50,14 @@ public class FallingSandModel {
 	}
 
 	public void sandStep(int i, int j) {
+		if (grid[i][j-1] != WATER) {
 		grid[i][j] = EMPTY;
 		grid[i][j-1] = SAND;
+		}
+		if (grid[i][j-1] == WATER) {
+		grid[i][j] = WATER;
+		grid[i][j-1] = SAND;
+		}
 		
 	}
 
