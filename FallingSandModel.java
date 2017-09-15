@@ -45,25 +45,29 @@ public class FallingSandModel {
 	}
 
 	public void waterStep(int i, int j) {
-		if (grid[i][j-1] != SAND) {
+		if ((grid[i][j-1] != SAND) || (grid[i][j-1] != METAL)) {
 			grid[i][j] = EMPTY;
 			grid[i][j-1] = WATER;
 			}
-		if (grid[i][j-1] == SAND) {
+		if ((grid[i][j-1] == SAND) || (grid[i][j-1] == METAL)) {
 			grid[i][j] = WATER;
 		}
 	}
 
 	public void sandStep(int i, int j) {
-		if (grid[i][j-1] != WATER) {
-		grid[i][j] = EMPTY;
-		grid[i][j-1] = SAND;
+		if ((grid[i][j-1] != METAL) && (grid[i][j-1] != WATER)) {
+			grid[i][j] = EMPTY;
+			grid[i][j-1] = SAND;
 		}
-		if (grid[i][j-1] == WATER) {
-		grid[i][j] = WATER;
-		grid[i][j-1] = SAND;
+		 if (grid[i][j-1] == METAL) {
+			grid[i][j] = SAND;
+			grid[i][j-1] = METAL;
 		}
-		
+		 if (grid[i][j-1] == WATER) {
+			grid[i][j] = WATER;
+			grid[i][j-1] = SAND;
+		}
+
 	}
 
 }
