@@ -1,4 +1,3 @@
-
 import edu.princeton.cs.algs4.StdRandom;
 
 public class FallingSandModel {
@@ -121,7 +120,7 @@ public class FallingSandModel {
 				}
 				if (grid[i-1][j] == WATER){
 					grid[i-1][j] = ACID;
-					grid[i-1][j] = WATER;
+					grid[i][j] = WATER;
 				}
 				
 
@@ -134,7 +133,7 @@ public class FallingSandModel {
 				}
 				if (grid[i+1][j] == WATER){
 					grid[i+1][j] = ACID;
-					grid[i+1][j] = WATER;
+					grid[i][j] = WATER;
 				}
 				
 			}
