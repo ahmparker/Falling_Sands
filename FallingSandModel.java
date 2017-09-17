@@ -1,87 +1,102 @@
-public class FallingSandModel {
 
+import edu.princeton.cs.algs4.StdRandom;
+
+public class FallingSandModel {
 	public static final int MODEL_SIZE = 200;
-	public static final int METAL = 0;
-	public static final int EMPTY = 1;
+	public static final int METAL = 1;
+	public static final int EMPTY = 0;
 	public static final int SAND = 2;
 	public static final int WATER = 3;
-	public static final int ACID = 4;
-
-	private int [][] grid;
+	
+	private int[][] grid;
 	private int mode;
-	
-	public int getMode() {
-		return mode;
-		
-	}
-	
+
 	public FallingSandModel() {
-		grid = new int [MODEL_SIZE][MODEL_SIZE]; //intializes our 200 x 200 grid
+		grid = new int[MODEL_SIZE][MODEL_SIZE];
 		mode = METAL;
 	}
 
-	public int get(int x, int y) {
-		return grid[x][y]; //returns our x y coordination
+	public int getMode() {
+		return mode;
 	}
 
-	public boolean inGrid(int x, int y) {
-		return (x >=0 && x < MODEL_SIZE && y >=0 && y < MODEL_SIZE); //returns true if both x and y values are at least 0 and smaller than the MODEL_SIZE we define
-	}
-
-	public void placeParticle(int x, int y) {
-		
-		grid[x][y] = mode;
-		
-	}
-      
 	public void setMode(int i) {
 		mode = i;
-		
+	}
+
+	public int get(int i, int j) {
+		return grid[i][j];
+	}
+
+	public boolean inGrid(int i, int j) {
+		return i >= 0 && i < MODEL_SIZE && j >= 0 && j < MODEL_SIZE;
+	}
+
+	public void placeParticle(int i, int j) {
+		grid[i][j] = mode;
 	}
 
 	public void step() {
-		// TODO Auto-generated method stub
-		
-	}
+		int row = StdRandom.uniform(MODEL_SIZE);
+		int column = StdRandom.uniform(MODEL_SIZE);
+		if (grid[row][column] > 0) {
+			if (grid[row][column] == SAND) {
+				sandStep(row, column);
+			}
 
-	public void acidStep(int i, int j){
-		if ((grid[i][j-1] == METAL) || (grid[i][j-1] == SAND)){
-			grid[i][j] = EMPTY;
-			grid[i][j-1] = ACID;
-		}
-		else if (grid[i][j-1] == WATER) {
-			grid[i][j] = WATER;
-			grid[i][j-1] = ACID;
+			if (grid[row][column] == WATER) {
+				waterStep(row, column);
 			}
-		else {
-			grid[i][j] = EMPTY;
-			grid[i][j-1] = ACID;
-		}
-	}
-	
-	public void waterStep(int i, int j) {
-		if ((grid[i][j-1] != SAND) || (grid[i][j-1] != METAL)) {
-			grid[i][j] = EMPTY;
-			grid[i][j-1] = WATER;
-			}
-		if ((grid[i][j-1] == SAND) || (grid[i][j-1] == METAL)) {
-			grid[i][j] = WATER;
+			
 		}
 	}
 
 	public void sandStep(int i, int j) {
-		if (grid[i][j-1] == METAL) {
-			grid[i][j] = SAND;
-			grid[i][j-1] = METAL;
+		if (inGrid(i, j - 1)) {
+			if (grid[i][j - 1] == EMPTY) {
+				grid[i][j - 1] = SAND;
+				grid[i][j] = EMPTY;
 			}
-		else if (grid[i][j-1] == WATER) {
-			grid[i][j] = WATER;
-			grid[i][j-1] = SAND;
+			if (grid[i][j - 1] == WATER) {
+				grid[i][j - 1] = SAND;
+				grid[i][j] = WATER;
 			}
-		else  {
-			grid[i][j] = EMPTY;
-			grid[i][j-1] = SAND;
-			}
+			
+		}
+
 	}
 
+	public void waterStep(int i, int j) {
+		int direction = StdRandom.uniform(3);
+		// down = 0, left=1, right=2
+		// down
+		if (direction == 0 && inGrid(i, j - 1)) {
+			if (grid[i][j - 1] == EMPTY) {
+				grid[i][j - 1] = WATER;
+				grid[i][j] = EMPTY;
+			}
+			
+
+		}
+		// left
+		if (direction == 1 && inGrid(i - 1, j)) {
+			if (grid[i - 1][j] == EMPTY) {
+				grid[i - 1][j] = WATER;
+				grid[i][j] = EMPTY;
+			}
+			
+
+		}
+		// right
+		if (direction == 2 && inGrid(i + 1, j)) {
+			if (grid[i + 1][j] == EMPTY) {
+				grid[i + 1][j] = WATER;
+				grid[i][j] = EMPTY;
+			}
+			
+		}
+
+	}
+
+	
 }
