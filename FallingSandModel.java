@@ -1,4 +1,3 @@
-
 public class FallingSandModel {
 
 	public static final int MODEL_SIZE = 200;
@@ -6,13 +5,14 @@ public class FallingSandModel {
 	public static final int EMPTY = 1;
 	public static final int SAND = 2;
 	public static final int WATER = 3;
+	public static final int ACID = 4;
 
 	private int [][] grid;
 	private int mode;
 	
 	public int getMode() {
-		// TODO Auto-generated method stub
-		return 0;
+		return mode;
+		
 	}
 	
 	public FallingSandModel() {
@@ -44,6 +44,21 @@ public class FallingSandModel {
 		
 	}
 
+	public void acidStep(int i, int j){
+		if ((grid[i][j-1] == METAL) || (grid[i][j-1] == SAND)){
+			grid[i][j] = EMPTY;
+			grid[i][j-1] = ACID;
+		}
+		else if (grid[i][j-1] == WATER) {
+			grid[i][j] = WATER;
+			grid[i][j-1] = ACID;
+			}
+		else {
+			grid[i][j] = EMPTY;
+			grid[i][j-1] = ACID;
+		}
+	}
+	
 	public void waterStep(int i, int j) {
 		if ((grid[i][j-1] != SAND) || (grid[i][j-1] != METAL)) {
 			grid[i][j] = EMPTY;
@@ -55,19 +70,18 @@ public class FallingSandModel {
 	}
 
 	public void sandStep(int i, int j) {
-		if ((grid[i][j-1] != METAL) && (grid[i][j-1] != WATER)) {
-			grid[i][j] = EMPTY;
-			grid[i][j-1] = SAND;
-		}
-		 if (grid[i][j-1] == METAL) {
+		if (grid[i][j-1] == METAL) {
 			grid[i][j] = SAND;
 			grid[i][j-1] = METAL;
-		}
-		 if (grid[i][j-1] == WATER) {
+			}
+		else if (grid[i][j-1] == WATER) {
 			grid[i][j] = WATER;
 			grid[i][j-1] = SAND;
-		}
-
+			}
+		else  {
+			grid[i][j] = EMPTY;
+			grid[i][j-1] = SAND;
+			}
 	}
 
 }
