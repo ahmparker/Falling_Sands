@@ -103,7 +103,7 @@ public class FallingSandModel {
 			// down = 0, left=1, right=2
 			// down
 			if (direction == 0 && inGrid(i, j - 1)) {
-				if (grid[i][j - 1] == EMPTY) {
+				if ((grid[i + 1][j] == EMPTY) || (grid[i + 1][j] == METAL) || (grid[i + 1][j] == SAND)) {
 					grid[i][j - 1] = ACID;
 					grid[i][j] = EMPTY;
 				}
@@ -112,7 +112,7 @@ public class FallingSandModel {
 			}
 			// left
 			if (direction == 1 && inGrid(i - 1, j)) {
-				if (grid[i - 1][j] == EMPTY) {
+				if ((grid[i + 1][j] == EMPTY) || (grid[i + 1][j] == METAL) || (grid[i + 1][j] == SAND)) {
 					grid[i - 1][j] = ACID;
 					grid[i][j] = EMPTY;
 				}
@@ -121,7 +121,7 @@ public class FallingSandModel {
 			}
 			// right
 			if (direction == 2 && inGrid(i + 1, j)) {
-				if (grid[i + 1][j] == EMPTY) {
+				if ((grid[i + 1][j] == EMPTY) || (grid[i + 1][j] == METAL) || (grid[i + 1][j] == SAND)) {
 					grid[i + 1][j] = ACID;
 					grid[i][j] = EMPTY;
 				}
