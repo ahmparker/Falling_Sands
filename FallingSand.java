@@ -1,15 +1,13 @@
 import java.awt.Color;
 
-import edu.princeton.cs.algs4.StdDraw;
-
 /** GUI for the Falling Sand toy. */
 public class FallingSand {
 
 	/** Names of the buttons. */
-	private static final String[] BUTTON_NAMES = { "Empty", "Metal", "Sand", "Water" };
+	private static final String[] BUTTON_NAMES = { "Empty", "Metal", "Sand", "Water", "Acid" };
 
 	/** Colors of the various particle types. */
-	private static final Color[] COLORS = { StdDraw.BLACK, StdDraw.LIGHT_GRAY, StdDraw.YELLOW, StdDraw.BLUE };
+	private static final Color[] COLORS = { StdDraw.BLACK, StdDraw.LIGHT_GRAY, StdDraw.YELLOW, StdDraw.BLUE, StdDraw.GREEN};
 
 	/** Number of simulation steps per screen redraw. */
 	private static final int SPEED = 10000;
