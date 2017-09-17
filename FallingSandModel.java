@@ -7,7 +7,7 @@ public class FallingSandModel {
 	public static final int EMPTY = 0;
 	public static final int SAND = 2;
 	public static final int WATER = 3;
-	public static final int ACID = 4; 
+	public static final int ACID = 4; //eats through sand and metal
 	
 	private int[][] grid;
 	private int mode;
@@ -80,6 +80,7 @@ public class FallingSandModel {
 				grid[i][j] = EMPTY;
 			}
 			
+			
 		}
 		// left
 		if (direction == 1 && inGrid(i - 1, j)) {
@@ -103,18 +104,24 @@ public class FallingSandModel {
 			// down = 0, left=1, right=2
 			// down
 			if (direction == 0 && inGrid(i, j - 1)) {
-				if ((grid[i + 1][j] == EMPTY) || (grid[i + 1][j] == METAL) || (grid[i + 1][j] == SAND)) {
+				if ((grid[i][j-1] == EMPTY) || (grid[i][j-1] == METAL) || (grid[i][j-1] == SAND)) {
 					grid[i][j - 1] = ACID;
 					grid[i][j] = EMPTY;
 				}
-				
-
+				if (grid[i][j-1] == WATER){
+					grid[i][j - 1] = ACID;
+					grid[i][j] = WATER;
+				}
 			}
 			// left
 			if (direction == 1 && inGrid(i - 1, j)) {
-				if ((grid[i + 1][j] == EMPTY) || (grid[i + 1][j] == METAL) || (grid[i + 1][j] == SAND)) {
+				if ((grid[i - 1][j] == EMPTY) || (grid[i - 1][j] == METAL) || (grid[i - 1][j] == SAND)) {
 					grid[i - 1][j] = ACID;
-					grid[i][j] = EMPTY;
+					grid[i - 1][j] = EMPTY;
+				}
+				if (grid[i-1][j] == WATER){
+					grid[i-1][j] = ACID;
+					grid[i-1][j] = WATER;
 				}
 				
 
@@ -124,6 +131,10 @@ public class FallingSandModel {
 				if ((grid[i + 1][j] == EMPTY) || (grid[i + 1][j] == METAL) || (grid[i + 1][j] == SAND)) {
 					grid[i + 1][j] = ACID;
 					grid[i][j] = EMPTY;
+				}
+				if (grid[i+1][j] == WATER){
+					grid[i+1][j] = ACID;
+					grid[i+1][j] = WATER;
 				}
 				
 			}
