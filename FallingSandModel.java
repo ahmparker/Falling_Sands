@@ -73,6 +73,7 @@ public class FallingSandModel {
 		int direction = StdRandom.uniform(3);
 		// down = 0, left=1, right=2
 		// down
+		//direction = 0 ; //use this to pass tests
 		if (direction == 0 && inGrid(i, j - 1)) {
 			if (grid[i][j - 1] == EMPTY) {
 				grid[i][j - 1] = WATER;
@@ -102,6 +103,7 @@ public class FallingSandModel {
 			int direction = StdRandom.uniform(3);
 			// down = 0, left=1, right=2
 			// down
+			//direction = 0; //set this to 0 to pass tests
 			if (direction == 0 && inGrid(i, j - 1)) {
 				if ((grid[i][j-1] == EMPTY) || (grid[i][j-1] == METAL) || (grid[i][j-1] == SAND)) {
 					grid[i][j - 1] = ACID;
@@ -116,7 +118,7 @@ public class FallingSandModel {
 			if (direction == 1 && inGrid(i - 1, j)) {
 				if ((grid[i - 1][j] == EMPTY) || (grid[i - 1][j] == METAL) || (grid[i - 1][j] == SAND)) {
 					grid[i - 1][j] = ACID;
-					grid[i - 1][j] = EMPTY;
+					grid[i][j] = EMPTY;
 				}
 				if (grid[i-1][j] == WATER){
 					grid[i-1][j] = ACID;
