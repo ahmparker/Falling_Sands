@@ -1,105 +1,145 @@
-import static org.junit.Assert.*;
+import edu.princeton.cs.algs4.StdRandom;
 
-import org.junit.Before;
-import org.junit.Test;
-
-public class FallingSandModelTest {
-
-	private FallingSandModel model;
+public class FallingSandModel {
+	public static final int MODEL_SIZE = 200;
+	public static final int METAL = 1;
+	public static final int EMPTY = 0;
+	public static final int SAND = 2;
+	public static final int WATER = 3;
+	public static final int ACID = 4; //eats through sand and metal
 	
-	@Before
-	public void setUp() throws Exception {
-		model = new FallingSandModel();
+	private int[][] grid;
+	private int mode;
+
+	public FallingSandModel() {
+		grid = new int[MODEL_SIZE][MODEL_SIZE];
+		mode = METAL;
 	}
 
-	@Test
-	public void inGridAcceptsPointInDiagram() {
-		assertTrue(model.inGrid(99, 4));
-	}
-	
-	@Test
-	public void inGridRejectsPointsOutsideDiagram() {
-		assertFalse(model.inGrid(FallingSandModel.MODEL_SIZE, 8));
-		assertFalse(model.inGrid(-1, 15));
-		assertTrue(model.inGrid(0, 16));
-		assertFalse(model.inGrid(23, -1));
-		assertFalse(model.inGrid(42, FallingSandModel.MODEL_SIZE));
-	}
-	
-	@Test
-	public void gridInitiallyEmpty() {
-		assertEquals(0, model.get(18, 91));
-	}
-	
-	@Test
-	public void particleIsPlaced() {
-		model.placeParticle(50, 60);
-		assertEquals(FallingSandModel.METAL, model.get(50, 60));
+	public int getMode() {
+		return mode;
 	}
 
-	@Test
-	public void particlePlacedDependsOnMode() {
-		model.setMode(FallingSandModel.EMPTY);
-		model.placeParticle(99, 3);
-		assertEquals(FallingSandModel.EMPTY, model.get(99, 3));
-	}
-	
-	@Test
-	public void sandMovesDownward() {
-		model.setMode(FallingSandModel.SAND);
-		model.placeParticle(121, 29);
-		model.sandStep(121, 29);
-		assertEquals(FallingSandModel.EMPTY, model.get(121, 29));
-		assertEquals(FallingSandModel.SAND, model.get(121, 28));		
-	}
-	
-	@Test
-	public void metalBlocksSand() {
-		model.setMode(FallingSandModel.SAND);
-		model.placeParticle(44, 81);
-		model.setMode(FallingSandModel.METAL);
-		model.placeParticle(44, 80);
-		model.sandStep(44, 81);
-		assertEquals(FallingSandModel.SAND, model.get(44, 81));
-		assertEquals(FallingSandModel.METAL, model.get(44, 80));				
+	public void setMode(int i) {
+		mode = i;
 	}
 
-	@Test
-	public void waterMoves() {
-		model.setMode(FallingSandModel.WATER);
-		model.placeParticle(14, 199);
-		model.waterStep(14, 199);
-		assertEquals(FallingSandModel.EMPTY, model.get(14, 199));
-		boolean left = (model.get(13, 199) == FallingSandModel.WATER);
-		boolean down = (model.get(14, 198) == FallingSandModel.WATER);
-		boolean right = (model.get(15, 199) == FallingSandModel.WATER);
-		assertTrue(left || down || right);		
+	public int get(int i, int j) {
+		return grid[i][j];
 	}
 
-	@Test
-	public void metalBlocksWater() {
-		model.setMode(FallingSandModel.WATER);
-		model.placeParticle(141, 67);
-		model.setMode(FallingSandModel.METAL);
-		model.placeParticle(140, 67);
-		model.placeParticle(141, 66);
-		model.placeParticle(142, 67);
-		model.waterStep(44, 67);
-		assertEquals(FallingSandModel.WATER, model.get(141, 67));
-		assertEquals(FallingSandModel.METAL, model.get(140, 67));				
-		assertEquals(FallingSandModel.METAL, model.get(141, 66));				
-		assertEquals(FallingSandModel.METAL, model.get(142, 67));				
+	public boolean inGrid(int i, int j) {
+		return i >= 0 && i < MODEL_SIZE && j >= 0 && j < MODEL_SIZE;
 	}
+
+	public void placeParticle(int i, int j) {
+		grid[i][j] = mode;
+	}
+
+	public void step() {
+		int row = StdRandom.uniform(MODEL_SIZE);
+		int column = StdRandom.uniform(MODEL_SIZE);
+		if (grid[row][column] > 0) {
+			if (grid[row][column] == SAND) {
+				sandStep(row, column);
+			}
+
+			if (grid[row][column] == WATER) {
+				waterStep(row, column);
+			}
+			if (grid[row][column] == ACID) {
+				acidStep(row, column);
+			}
+			
+		}
+	}
+
+	public void sandStep(int i, int j) {
+		if (inGrid(i, j - 1)) {
+			if (grid[i][j - 1] == EMPTY) {
+				grid[i][j - 1] = SAND;
+				grid[i][j] = EMPTY;
+			}
+			if (grid[i][j - 1] == WATER) {
+				grid[i][j - 1] = SAND;
+				grid[i][j] = WATER;
+			}
+			
+		}
+
+	}
+
+	public void waterStep(int i, int j) {
+		int direction = StdRandom.uniform(3);
+		// down = 0, left=1, right=2
+		// down
+		if (direction == 0 && inGrid(i, j - 1)) {
+			if (grid[i][j - 1] == EMPTY) {
+				grid[i][j - 1] = WATER;
+				grid[i][j] = EMPTY;
+			}
+			
+			
+		}
+		// left
+		if (direction == 1 && inGrid(i - 1, j)) {
+			if (grid[i - 1][j] == EMPTY) {
+				grid[i - 1][j] = WATER;
+				grid[i][j] = EMPTY;
+			}
+			
+		}
+		// right
+		if (direction == 2 && inGrid(i + 1, j)) {
+			if (grid[i + 1][j] == EMPTY) {
+				grid[i + 1][j] = WATER;
+				grid[i][j] = EMPTY;
+			}
+		}
+			
+		}
+		public void acidStep(int i, int j) {
+			int direction = StdRandom.uniform(3);
+			// down = 0, left=1, right=2
+			// down
+			//direction = 0;
+			if (direction == 0 && inGrid(i, j - 1)) {
+				if ((grid[i][j-1] == EMPTY) || (grid[i][j-1] == METAL) || (grid[i][j-1] == SAND)) {
+					grid[i][j - 1] = ACID;
+					grid[i][j] = EMPTY;
+				}
+				if (grid[i][j-1] == WATER){
+					grid[i][j - 1] = ACID;
+					grid[i][j] = WATER;
+				}
+			}
+			// left
+			if (direction == 1 && inGrid(i - 1, j)) {
+				if ((grid[i - 1][j] == EMPTY) || (grid[i - 1][j] == METAL) || (grid[i - 1][j] == SAND)) {
+					grid[i - 1][j] = ACID;
+					grid[i][j] = EMPTY;
+				}
+				if (grid[i-1][j] == WATER){
+					grid[i-1][j] = ACID;
+					grid[i][j] = WATER;
+				}
+				
+
+			}
+			// right
+			if (direction == 2 && inGrid(i + 1, j)) {
+				if ((grid[i + 1][j] == EMPTY) || (grid[i + 1][j] == METAL) || (grid[i + 1][j] == SAND)) {
+					grid[i + 1][j] = ACID;
+					grid[i][j] = EMPTY;
+				}
+				if (grid[i+1][j] == WATER){
+					grid[i+1][j] = ACID;
+					grid[i][j] = WATER;
+				}
+				
+			}
+
+	}
+
 	
-	@Test
-	public void waterDisplacesSand() {
-		model.setMode(FallingSandModel.SAND);
-		model.placeParticle(128, 12);
-		model.setMode(FallingSandModel.WATER);
-		model.placeParticle(128, 11);
-		model.sandStep(128, 12);
-		assertEquals(FallingSandModel.WATER, model.get(128, 12));
-		assertEquals(FallingSandModel.SAND, model.get(128, 11));
-	}
-
 }
